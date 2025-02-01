@@ -9,9 +9,9 @@ export default function Footer() {
               <h3 className="text-sm font-semibold text-gray-500 tracking-wider uppercase">Shop</h3>
               <ul className="mt-4 space-y-4">
                 <li>
-                  <a href="/products" className="text-base text-gray-500 hover:text-green-600">
+                  <Link href="/products" className="text-base text-gray-500 hover:text-green-600">
                     All Products
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
