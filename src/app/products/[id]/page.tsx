@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { PrismaClient } from '@prisma/client'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
