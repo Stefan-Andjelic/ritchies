@@ -1,16 +1,23 @@
 import { NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
+import { type NextRequest } from 'next/server'
 
 const prisma = new PrismaClient()
 
+type RouteContext = {
+  params: {
+    id: string
+  }
+}
+
 export async function GET(
-  request: Request,
-  context: { params: { id: string } }
+  _request: Request,
+  { params }: RouteContext
 ) {
   try {
     const product = await prisma.product.findUnique({
       where: {
-        id: parseInt(context.params.id)
+        id: parseInt(params.id)
       }
     })
     if (!product) {
@@ -27,7 +34,7 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: RouteContext
 ) {
   try {
     const json = await request.json()
@@ -53,8 +60,8 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
+  _request: Request,
+  { params }: RouteContext
 ) {
   try {
     await prisma.product.delete({
