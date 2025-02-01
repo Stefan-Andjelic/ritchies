@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
+import { NextRequest } from 'next/server'
 
 const prisma = new PrismaClient()
 
@@ -10,7 +11,7 @@ type RouteContext = {
 }
 
 export async function GET(
-  _request: Request,
+  _request: NextRequest,
   { params }: RouteContext
 ) {
   try {
@@ -32,7 +33,7 @@ export async function GET(
 }
 
 export async function PUT(
-  request: Request,
+  request: NextRequest,
   { params }: RouteContext
 ) {
   try {
@@ -59,7 +60,7 @@ export async function PUT(
 }
 
 export async function DELETE(
-  _request: Request,
+  _request: NextRequest,
   { params }: RouteContext
 ) {
   try {
