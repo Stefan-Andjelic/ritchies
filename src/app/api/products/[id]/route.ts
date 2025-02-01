@@ -19,7 +19,7 @@ export async function GET(
     return NextResponse.json(product)
   } catch (error) {
     return NextResponse.json(
-      { error: 'Error fetching product' },
+      { error: `Error fetching product: ${error}` },
       { status: 500 }
     )
   }
@@ -46,7 +46,7 @@ export async function PUT(
     return NextResponse.json(product)
   } catch (error) {
     return NextResponse.json(
-      { error: 'Error updating product' },
+      { error: `Error updating product: ${error}` },
       { status: 500 }
     )
   }
@@ -65,7 +65,7 @@ export async function DELETE(
     return NextResponse.json({ success: true })
   } catch (error) {
     return NextResponse.json(
-      { error: 'Error deleting product' },
+      { error: `Error deleting product: ${error}` },
       { status: 500 }
     )
   }

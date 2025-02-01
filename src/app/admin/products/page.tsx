@@ -8,13 +8,6 @@ import { ProductFormData } from '@/types'
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    price: '',
-    imageUrl: '',
-    inventory: ''
-  })
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
 
   useEffect(() => {
@@ -31,10 +24,6 @@ export default function ProductsPage() {
     } finally {
       setIsLoading(false)
     }
-  }
-
-  const handleEdit = (product: Product) => {
-    setEditingProduct(product)
   }
   
   const handleUpdate = async (formData: ProductFormData) => {

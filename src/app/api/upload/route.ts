@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ url: relativePath })
   } catch (error) {
     return NextResponse.json(
-      { error: 'Error uploading file' },
+      { error: `Error uploading file: ${error}` },
       { status: 500 }
     )
   }

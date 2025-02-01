@@ -13,7 +13,7 @@ export async function POST(req: Request) {
 
     switch (event.type) {
       case 'checkout.session.completed':
-        const session = event.data.object
+        // const session = event.data.object
         // Handle successful payment
         // Update order status, send confirmation email, etc.
         break
@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ received: true })
   } catch (err) {
     return NextResponse.json(
-      { error: 'Webhook handler failed' },
+      { error: `Webhook handler failed: ${err}` },
       { status: 400 }
     )
   }

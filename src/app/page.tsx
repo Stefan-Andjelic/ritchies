@@ -1,6 +1,5 @@
 import { PrismaClient } from '@prisma/client'
 import ProductCard from '@/components/shop/ProductCard'
-import type { Product } from '@/types'
 
 const prisma = new PrismaClient()
 

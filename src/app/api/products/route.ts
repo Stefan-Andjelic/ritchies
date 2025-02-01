@@ -13,7 +13,7 @@ export async function GET() {
     return NextResponse.json(products)
   } catch (error) {
     return NextResponse.json(
-      { error: 'Error fetching products' },
+      { error: `Error fetching products: ${error}` },
       { status: 500 }
     )
   }
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     return NextResponse.json(product)
   } catch (error) {
     return NextResponse.json(
-      { error: 'Error creating product' },
+      { error: `Error creating product: ${error}` },
       { status: 500 }
     )
   }
