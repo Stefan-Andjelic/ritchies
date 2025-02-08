@@ -35,8 +35,8 @@ export default async function Home() {
             Handcrafted with Love
           </h1>
           <p className="mt-6 max-w-3xl text-xl text-gray-500">
-            Experience the finest natural skincare products made with farm-fresh ingredients. 
-            From body lotions to lip balms, each product is crafted with care.
+            Experience the finest natural skincare products made with farm-fresh ingredients, here in the USA.
+            We craft and product body lotion and hand cream.
           </p>
           <div className="mt-10">
             
