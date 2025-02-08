@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import { useState, useEffect } from 'react'
 import type { Product, ProductFormData } from '@/types'
+import { supabase } from '@/lib/supabase'
 
 interface ProductFormProps {
   product?: Product
@@ -18,6 +19,7 @@ export default function ProductForm({ product, onSubmit, onCancel }: ProductForm
     imageUrl: '',
     inventory: ''
   })
+  const [imageFile, setImageFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
 
@@ -35,38 +37,72 @@ export default function ProductForm({ product, onSubmit, onCancel }: ProductForm
     }
   }, [product])
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  // useEffect(() => {
+  //   // Clean up object URL to prevent memory leaks
+  //   return () => {
+  //     if (imagePreview && !imagePreview.startsWith('http')) {
+  //       URL.revokeObjectURL(imagePreview)
+  //     }
+  //   }
+  // }, [imagePreview])
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (!file) return
-
-    setIsUploading(true)
-    try {
-      const formData = new FormData()
-      formData.append('file', file)
-
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      })
-
-      if (!response.ok) {
-        throw new Error('Upload failed')
+    if (file) {
+      // Add validation
+      if (!file.type.startsWith('image/')) {
+        alert('Please upload an image file')
+        return
       }
-
-      const data = await response.json()
-      setFormData(prev => ({ ...prev, imageUrl: data.url }))
-      setImagePreview(data.url)
-    } catch (error) {
-      console.error('Error uploading image:', error)
-      alert('Failed to upload image')
-    } finally {
-      setIsUploading(false)
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        alert('File size must be less than 5MB')
+        return
+      }
+      setImageFile(file)
+      setImagePreview(URL.createObjectURL(file))
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const uploadImage = async (file: File) => {
+    console.log('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
+    const fileExt = file.name.split('.').pop()
+    const fileName = `${Date.now()}.${fileExt}`
+    
+    const { data, error } = await supabase.storage
+      .from('products')
+      .upload(fileName, file)
+
+    if (error) {
+      console.log(`Error uploading file: ${error.message}`)
+      throw error
+    }
+    const { data: { publicUrl } } = supabase.storage
+      .from('products')
+      .getPublicUrl(fileName)
+
+    return publicUrl
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    onSubmit(formData)
+    setIsUploading(true)
+
+    try {
+      let imageUrl = formData.imageUrl
+      
+      if (imageFile) {
+        imageUrl = await uploadImage(imageFile)
+      }
+
+      onSubmit({
+        ...formData,
+        imageUrl
+      })
+    } catch (error) {
+      console.error('Error uploading image:', error)
+    } finally {
+      setIsUploading(false)
+    }
   }
 
   return (
@@ -114,7 +150,7 @@ export default function ProductForm({ product, onSubmit, onCancel }: ProductForm
             <input
                 type="file"
                 accept="image/*"
-                onChange={handleImageUpload}
+                onChange={handleImageChange}
                 className="sr-only"
                 disabled={isUploading}
             />

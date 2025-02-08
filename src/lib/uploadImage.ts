@@ -1,23 +1,30 @@
-import { writeFile } from 'fs/promises'
-import path from 'path'
+import { supabase } from './supabase'
 
-export async function uploadImage(file: File): Promise<string> {
+const uploadImage = async (file: File) => {
   try {
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
+    const fileExt = file.name.split('.').pop()
+    const fileName = `${Date.now()}.${fileExt}`
+    
+    console.log('Attempting to upload:', fileName) // Debug log
+    
+    const { data, error } = await supabase.storage
+      .from('products')
+      .upload(fileName, file)
 
-    // Create a unique filename
-    const uniqueFilename = `${Date.now()}-${file.name}`
-    const relativePath = `/uploads/products/${uniqueFilename}`
-    const absolutePath = path.join(process.cwd(), 'public', relativePath)
+    if (error) {
+      console.error('Supabase upload error:', error) // More detailed error
+      throw error
+    }
 
-    // Save the file
-    await writeFile(absolutePath, buffer)
+    console.log('Upload successful:', data) // Debug log
 
-    // Return the public URL
-    return relativePath
-  } catch (error) {
-    console.error('Error uploading image:', error)
-    throw new Error('Failed to upload image')
+    const { data: { publicUrl } } = supabase.storage
+      .from('products')
+      .getPublicUrl(fileName)
+
+    return publicUrl
+  } catch (err) {
+    console.error('Full upload error:', err) // Full error object
+    throw err
   }
 }
