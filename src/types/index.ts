@@ -12,9 +12,9 @@ export interface Product {
 export interface ProductFormData {
   name: string
   description: string
-  price: string
+  price: number
   imageUrl: string
-  inventory: string
+  inventory: number
 }
 
 export interface CartItem {
