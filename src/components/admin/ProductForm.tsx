@@ -4,9 +4,6 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { uploadImage, ImageUploadError, validateImage } from '@/lib/supabase-storage'
 import type { Product, ProductFormData } from '@/types'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import toast from 'react-hot-toast'
-import { supabase } from '@/lib/supabase'
 
 interface ProductFormProps {
   product?: Product
